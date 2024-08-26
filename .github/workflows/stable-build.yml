@@ -47,6 +47,28 @@ jobs:
               env:
                   GH_TOKEN: ${{github.token}}
 
+            - name: Fetch ArmCord APT Repo
+              if: ${{matrix.os}} == "ubuntu-latest"
+              uses: actions/checkout@v4
+              with:
+                  repository: armcord/apt-repo
+                  path: apt-repo
+                  sparse-checkout: true
+                  token: ${{secrets.ARMCORD_APT_REPO_CONTENTS_RW}}
+
+            - name: Deploy to ArmCord APT repository
+              if: ${{matrix.os}} == "ubuntu-latest"
+              run: |
+                  mkdir apt-repo/debian
+                  cp dist/*.deb apt-repo/debian
+                  cd apt-repo
+                  echo debian >> .git/info/sparse-checkout
+                  git config user.name "APT Deployer"
+                  git config user.email "action@github.com"
+                  git add *.deb || true
+                  git commit -m "New Release (${{github.sha}})"
+                  git push -f || true
+
             - name: Save Electron Cache
               uses: actions/cache/save@v4
               with:

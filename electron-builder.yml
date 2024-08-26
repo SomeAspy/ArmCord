@@ -1,12 +1,17 @@
 appId: com.smartfridge.armcord
 productName: ArmCord
 artifactName: ArmCord-${version}-${os}-${arch}.${ext}
+
 mac:
     category: Network
+
+dmg:
+    writeUpdateInfo: false
 
 nsis:
     oneClick: false
     allowToChangeInstallationDirectory: true
+    differentialPackage: false
 
 appx:
     applicationId: smartfrigde.ArmCord
